@@ -1,66 +1,95 @@
-# 🚀 Welcome to Z.ai Code Scaffold
+# 📋 Task Tracker
 
-A modern, production-ready web application scaffold powered by cutting-edge technologies, designed to accelerate your development with [Z.ai](https://chat.z.ai)'s AI-powered coding assistance.
+A modern, feature-rich daily task tracking web application with AI-powered text enhancement and voice-to-text input capabilities.
 
-## ✨ Technology Stack
+![Task Tracker](https://img.shields.io/badge/Next.js-16.1.3-black?style=for-the-badge&logo=next.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.0-38B2AC?style=for-the-badge&logo=tailwind-css)
 
-This scaffold provides a robust foundation built with:
+## ✨ Features
 
-### 🎯 Core Framework
-- **⚡ Next.js 16** - The React framework for production with App Router
-- **📘 TypeScript 5** - Type-safe JavaScript for better developer experience
-- **🎨 Tailwind CSS 4** - Utility-first CSS framework for rapid UI development
+### 🎯 Core Functionality
+- **Task Management**: Create, read, update, and delete daily tasks
+- **Multiple Views**: 
+  - Calendar view - Click on any date to see tasks for that day
+  - List view - See all tasks grouped by date
+- **Category System**: Organize tasks by Work, Personal, Health, Finance, Shopping, Learning, or Other
+- **Date Tracking**: Associate tasks with specific dates for easy organization
 
-### 🧩 UI Components & Styling
-- **🧩 shadcn/ui** - High-quality, accessible components built on Radix UI
-- **🎯 Lucide React** - Beautiful & consistent icon library
-- **🌈 Framer Motion** - Production-ready motion library for React
-- **🎨 Next Themes** - Perfect dark mode in 2 lines of code
+### 🎤 Voice Input
+- **Voice-to-Text**: Record your tasks using voice input
+- **Easy Recording**: One-tap recording with visual feedback
+- **Auto-stop**: Automatic recording stop after 30 seconds for convenience
 
-### 📋 Forms & Validation
-- **🎣 React Hook Form** - Performant forms with easy validation
-- **✅ Zod** - TypeScript-first schema validation
+### 🤖 AI-Powered Enhancement
+- **Smart Text Enhancement**: Transform rough task descriptions into professional, actionable entries
+- **First-Person Writing**: AI writes in first-person perspective (e.g., "Tested", "Converted", "Created")
+- **Structured Output**: Uses bullet points and sub-bullets for clarity
+- **Preview Before Apply**: Review the AI-enhanced version before committing to changes
+- **Context-Aware**: Tailors enhancements based on task category
 
-### 🔄 State Management & Data Fetching
-- **🐻 Zustand** - Simple, scalable state management
-- **🔄 TanStack Query** - Powerful data synchronization for React
-- **🌐 Fetch** - Promise-based HTTP request
+### 🎨 User Interface
+- **Modern Design**: Clean, professional interface with smooth animations
+- **Responsive Layout**: Fully responsive design that works on all devices
+- **Dark Mode Support**: Built-in theme switching for comfortable viewing
+- **Intuitive UX**: User-friendly interface with clear visual feedback
+- **Toast Notifications**: Instant feedback for all user actions
 
-### 🗄️ Database & Backend
-- **🗄️ Prisma** - Next-generation TypeScript ORM
-- **🔐 NextAuth.js** - Complete open-source authentication solution
+## 🛠️ Technology Stack
 
-### 🎨 Advanced UI Features
-- **📊 TanStack Table** - Headless UI for building tables and datagrids
-- **🖱️ DND Kit** - Modern drag and drop toolkit for React
-- **📊 Recharts** - Redefined chart library built with React and D3
-- **🖼️ Sharp** - High performance image processing
+### Frontend
+- **Next.js 16.1.3** - React framework with App Router
+- **TypeScript 5** - Type-safe development
+- **Tailwind CSS 4** - Utility-first styling
+- **shadcn/ui** - Beautiful, accessible UI components
+- **Lucide React** - Icon library
+- **Framer Motion** - Smooth animations
+- **Next Themes** - Dark/light mode support
+- **date-fns** - Date formatting and manipulation
 
-### 🌍 Internationalization & Utilities
-- **🌍 Next Intl** - Internationalization library for Next.js
-- **📅 Date-fns** - Modern JavaScript date utility library
-- **🪝 ReactUse** - Collection of essential React hooks for modern development
+### Backend
+- **Next.js API Routes** - RESTful API endpoints
+- **Prisma ORM** - Type-safe database operations
+- **SQLite** - Lightweight database storage
 
-## 🎯 Why This Scaffold?
+### AI Integration
+- **z-ai-web-dev-sdk** - AI capabilities for:
+  - Speech-to-Text (ASR) for voice input
+  - Large Language Model (LLM) for text enhancement
 
-- **🏎️ Fast Development** - Pre-configured tooling and best practices
-- **🎨 Beautiful UI** - Complete shadcn/ui component library with advanced interactions
-- **🔒 Type Safety** - Full TypeScript configuration with Zod validation
-- **📱 Responsive** - Mobile-first design principles with smooth animations
-- **🗄️ Database Ready** - Prisma ORM configured for rapid backend development
-- **🔐 Auth Included** - NextAuth.js for secure authentication flows
-- **📊 Data Visualization** - Charts, tables, and drag-and-drop functionality
-- **🌍 i18n Ready** - Multi-language support with Next Intl
-- **🚀 Production Ready** - Optimized build and deployment settings
-- **🤖 AI-Friendly** - Structured codebase perfect for AI assistance
+### State Management
+- **React Hooks** - useState, useEffect, useRef
+- **Sonner** - Toast notifications
 
-## 🚀 Quick Start
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js 18+ installed
+- Bun package manager (recommended)
+
+### Installation
 
 ```bash
+# Clone the repository
+git clone https://github.com/muhammadsalman1176/task-tracker.git
+cd task-tracker
+
 # Install dependencies
 bun install
 
+# Set up the database
+bun run db:push
+
 # Start development server
+bun run dev
+```
+
+The application will be available at [http://localhost:3000](http://localhost:3000)
+
+### Available Scripts
+
+```bash
+# Development server
 bun run dev
 
 # Build for production
@@ -68,75 +97,186 @@ bun run build
 
 # Start production server
 bun start
+
+# Run linting
+bun run lint
+
+# Push database schema
+bun run db:push
+
+# Generate Prisma client
+bun run db:generate
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to see your application running.
+## 📖 Usage Guide
 
-## 🤖 Powered by Z.ai
+### Adding a Task
 
-This scaffold is optimized for use with [Z.ai](https://chat.z.ai) - your AI assistant for:
+1. **Enter Task Description**: Type your task in the text area
+2. **Select Date**: Choose the date for the task using the date picker
+3. **Choose Category**: Select a category from the dropdown
+4. **Add Task**: Click the "Add Task" button
 
-- **💻 Code Generation** - Generate components, pages, and features instantly
-- **🎨 UI Development** - Create beautiful interfaces with AI assistance  
-- **🔧 Bug Fixing** - Identify and resolve issues with intelligent suggestions
-- **📝 Documentation** - Auto-generate comprehensive documentation
-- **🚀 Optimization** - Performance improvements and best practices
+### Using Voice Input
 
-Ready to build something amazing? Start chatting with Z.ai at [chat.z.ai](https://chat.z.ai) and experience the future of AI-powered development!
+1. Click the **microphone icon** to start recording
+2. Speak your task description
+3. Click the **square icon** to stop recording
+4. The text will automatically appear in the task description field
+
+### Enhancing with AI
+
+1. Type or dictate your task description
+2. Click the **"Enhance with AI"** button (✨ icon)
+3. Review the enhanced version in the preview dialog
+4. Click **"Apply Enhanced Version"** to use it or **"Keep Original"** to discard
+
+### Managing Tasks
+
+**View Tasks by Date (Calendar View):**
+- Click on any date in the calendar to see tasks for that day
+- The selected date's tasks will appear on the right side
+
+**View All Tasks (List View):**
+- Switch to the "List View" tab
+- Tasks are grouped and sorted by date (newest first)
+
+**Edit a Task:**
+- Hover over a task card
+- Click the **pencil icon** to edit
+- Modify the description as needed
+- Click **"Save"** to update or **"Cancel"** to discard changes
+
+**Delete a Task:**
+- Hover over a task card
+- Click the **trash icon** to delete
 
 ## 📁 Project Structure
 
 ```
-src/
-├── app/                 # Next.js App Router pages
-├── components/          # Reusable React components
-│   └── ui/             # shadcn/ui components
-├── hooks/              # Custom React hooks
-└── lib/                # Utility functions and configurations
+task-tracker/
+├── prisma/
+│   ├── schema.prisma          # Database schema
+│   └── dev.db                 # SQLite database
+├── src/
+│   ├── app/
+│   │   ├── api/
+│   │   │   ├── tasks/
+│   │   │   │   ├── route.ts   # GET, POST tasks
+│   │   │   │   └── [id]/
+│   │   │   │       └── route.ts # PUT, DELETE task
+│   │   │   ├── transcribe/
+│   │   │   │   └── route.ts   # Voice-to-text endpoint
+│   │   │   └── enhance/
+│   │   │       └── route.ts   # AI text enhancement
+│   │   ├── layout.tsx         # Root layout
+│   │   └── page.tsx           # Main application
+│   ├── components/
+│   │   └── ui/                # shadcn/ui components
+│   └── lib/
+│       ├── db.ts              # Prisma client
+│       └── utils.ts           # Utility functions
+├── package.json
+├── tsconfig.json
+├── tailwind.config.ts
+└── README.md
 ```
 
-## 🎨 Available Features & Components
+## 🗄️ Database Schema
 
-This scaffold includes a comprehensive set of modern web development tools:
+```prisma
+model Task {
+  id          String   @id @default(cuid())
+  description String
+  date        String
+  category    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+```
 
-### 🧩 UI Components (shadcn/ui)
-- **Layout**: Card, Separator, Aspect Ratio, Resizable Panels
-- **Forms**: Input, Textarea, Select, Checkbox, Radio Group, Switch
-- **Feedback**: Alert, Toast (Sonner), Progress, Skeleton
-- **Navigation**: Breadcrumb, Menubar, Navigation Menu, Pagination
-- **Overlay**: Dialog, Sheet, Popover, Tooltip, Hover Card
-- **Data Display**: Badge, Avatar, Calendar
+## 🤖 AI Features
 
-### 📊 Advanced Data Features
-- **Tables**: Powerful data tables with sorting, filtering, pagination (TanStack Table)
-- **Charts**: Beautiful visualizations with Recharts
-- **Forms**: Type-safe forms with React Hook Form + Zod validation
+### Speech-to-Text
+- Converts voice recordings to text using ASR (Automatic Speech Recognition)
+- Supports multiple languages
+- Fast and accurate transcription
 
-### 🎨 Interactive Features
-- **Animations**: Smooth micro-interactions with Framer Motion
-- **Drag & Drop**: Modern drag-and-drop functionality with DND Kit
-- **Theme Switching**: Built-in dark/light mode support
+### Text Enhancement
+The AI enhancement feature transforms basic task descriptions into:
+- **Professional & Clear**: Well-structured, readable descriptions
+- **Action-Oriented**: Clear steps and next steps
+- **Detailed**: Relevant context and resources
+- **First-Person**: Written from your perspective (e.g., "Tested", "Created")
 
-### 🔐 Backend Integration
-- **Authentication**: Ready-to-use auth flows with NextAuth.js
-- **Database**: Type-safe database operations with Prisma
-- **API Client**: HTTP requests with Fetch + TanStack Query
-- **State Management**: Simple and scalable with Zustand
+**Example:**
+```
+Input:  "fix bug in login"
+Output: "• Tested and resolved the login page authentication bug
+          - Reproduced the issue in staging environment
+          - Reviewed authentication flow and error logs
+          - Implemented and tested the fix
+          - Verified with QA team before deploying to production"
+```
 
-### 🌍 Production Features
-- **Internationalization**: Multi-language support with Next Intl
-- **Image Optimization**: Automatic image processing with Sharp
-- **Type Safety**: End-to-end TypeScript with Zod validation
-- **Essential Hooks**: 100+ useful React hooks with ReactUse for common patterns
+## 🎨 Customization
 
-## 🤝 Get Started with Z.ai
+### Adding Categories
+Edit the `CATEGORIES` array in `src/app/page.tsx`:
 
-1. **Clone this scaffold** to jumpstart your project
-2. **Visit [chat.z.ai](https://chat.z.ai)** to access your AI coding assistant
-3. **Start building** with intelligent code generation and assistance
-4. **Deploy with confidence** using the production-ready setup
+```typescript
+const CATEGORIES = [
+  'Work',
+  'Personal',
+  'Health',
+  'Finance',
+  'Shopping',
+  'Learning',
+  'Other',
+  // Add your categories here
+]
+```
+
+### Modifying AI Prompts
+Edit the system prompt in `src/app/api/enhance/route.ts` to customize how the AI enhances text.
+
+## 📱 Responsive Design
+
+The application is fully responsive and works seamlessly on:
+- 📱 Mobile phones (320px+)
+- 📱 Tablets (768px+)
+- 💻 Desktops (1024px+)
+- 🖥️ Large screens (1280px+)
+
+## 🔒 Privacy & Security
+
+- All data is stored locally in SQLite database
+- Voice recordings are processed server-side and not stored
+- No external tracking or analytics
+- Your data stays on your machine
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📄 License
+
+This project is open source and available under the MIT License.
+
+## 👨‍💻 Author
+
+**Muhammad Salman**
+
+- GitHub: [@muhammadsalman1176](https://github.com/muhammadsalman1176)
+- Project: [Task Tracker](https://github.com/muhammadsalman1176/task-tracker)
+
+## 🙏 Acknowledgments
+
+- Built with [Next.js](https://nextjs.org/)
+- UI components from [shadcn/ui](https://ui.shadcn.com/)
+- Icons by [Lucide](https://lucide.dev/)
+- AI capabilities powered by [z-ai-web-dev-sdk](https://z.ai)
 
 ---
 
-Built with ❤️ for the developer community. Supercharged by [Z.ai](https://chat.z.ai) 🚀
-# task-tracker
+**Task Tracker** - Organize your daily tasks efficiently with AI-powered assistance! 🚀
