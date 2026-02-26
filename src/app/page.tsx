@@ -314,6 +314,74 @@ export default function Home() {
     setPreviewEnhancedText('')
   }
 
+  // Download tasks as PDF
+  const downloadPDF = async () => {
+    if (tasks.length === 0) {
+      toast.error('No tasks to download')
+      return
+    }
+
+    try {
+      setIsDownloadingPDF(true)
+      const response = await fetch('/api/tasks/export/pdf')
+
+      if (!response.ok) {
+        throw new Error('Failed to download PDF')
+      }
+
+      const blob = await response.blob()
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `task-tracker-${format(new Date(), 'yyyy-MM-dd-HHmmss')}.pdf`
+      document.body.appendChild(a)
+      a.click()
+      window.URL.revokeObjectURL(url)
+      document.body.removeChild(a)
+
+      toast.success('PDF downloaded successfully')
+    } catch (error) {
+      console.error('Error downloading PDF:', error)
+      toast.error('Failed to download PDF')
+    } finally {
+      setIsDownloadingPDF(false)
+    }
+  }
+
+  // Download tasks as Excel
+  const downloadExcel = async () => {
+    if (tasks.length === 0) {
+      toast.error('No tasks to download')
+      return
+    }
+
+    try {
+      setIsDownloadingExcel(true)
+      const response = await fetch('/api/tasks/export/excel')
+
+      if (!response.ok) {
+        throw new Error('Failed to download Excel')
+      }
+
+      const blob = await response.blob()
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `task-tracker-${format(new Date(), 'yyyy-MM-dd-HHmmss')}.xlsx`
+      document.body.appendChild(a)
+      a.click()
+      window.URL.revokeObjectURL(url)
+      document.body.removeChild(a)
+
+      toast.success('Excel downloaded successfully')
+    } catch (error) {
+      console.error('Error downloading Excel:', error)
+      toast.error('Failed to download Excel')
+    } finally {
+      setIsDownloadingExcel(false)
+    }
+  }
+
   // Group tasks by date for list view
   const groupTasksByDate = (tasks: Task[]) => {
     return tasks.reduce((groups, task) => {
