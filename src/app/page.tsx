@@ -358,47 +358,27 @@ export default function Home() {
                 <p className="text-sm text-muted-foreground">Organize your daily tasks</p>
               </div>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap justify-end">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={downloadPDF}
                 disabled={isDownloadingPDF || tasks.length === 0}
-                className="hidden sm:flex items-center gap-2"
+                className="flex items-center gap-2"
               >
                 <FileText className="h-4 w-4" />
-                {isDownloadingPDF ? 'Downloading...' : 'Export PDF'}
+                <span className="hidden sm:inline">{isDownloadingPDF ? 'Downloading...' : 'Export PDF'}</span>
               </Button>
               <Button
                 variant="outline"
                 size="sm"
                 onClick={downloadExcel}
                 disabled={isDownloadingExcel || tasks.length === 0}
-                className="hidden sm:flex items-center gap-2"
+                className="flex items-center gap-2"
               >
                 <FileSpreadsheet className="h-4 w-4" />
-                {isDownloadingExcel ? 'Downloading...' : 'Export Excel'}
+                <span className="hidden sm:inline">{isDownloadingExcel ? 'Downloading...' : 'Export Excel'}</span>
               </Button>
-              <div className="sm:hidden flex gap-2">
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={downloadPDF}
-                  disabled={isDownloadingPDF || tasks.length === 0}
-                  title="Export PDF"
-                >
-                  <FileText className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={downloadExcel}
-                  disabled={isDownloadingExcel || tasks.length === 0}
-                  title="Export Excel"
-                >
-                  <FileSpreadsheet className="h-4 w-4" />
-                </Button>
-              </div>
             </div>
           </div>
         </div>
