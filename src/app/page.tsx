@@ -48,6 +48,8 @@ export default function Home() {
   const [showPreviewDialog, setShowPreviewDialog] = useState(false)
   const [previewEnhancedText, setPreviewEnhancedText] = useState('')
   const [previewIsForEdit, setPreviewIsForEdit] = useState(false)
+  const [isDownloadingPDF, setIsDownloadingPDF] = useState(false)
+  const [isDownloadingExcel, setIsDownloadingExcel] = useState(false)
 
   // Refs for recording
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
