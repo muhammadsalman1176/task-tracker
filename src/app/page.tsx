@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { Mic, Calendar, List, Plus, Trash2, Edit2, Check, X, Square, Sparkles } from 'lucide-react'
+import { Mic, Calendar, List, Plus, Trash2, Edit2, Check, X, Square, Sparkles, FileText, FileSpreadsheet } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -356,6 +356,48 @@ export default function Home() {
                   Task Tracker
                 </h1>
                 <p className="text-sm text-muted-foreground">Organize your daily tasks</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={downloadPDF}
+                disabled={isDownloadingPDF || tasks.length === 0}
+                className="hidden sm:flex items-center gap-2"
+              >
+                <FileText className="h-4 w-4" />
+                {isDownloadingPDF ? 'Downloading...' : 'Export PDF'}
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={downloadExcel}
+                disabled={isDownloadingExcel || tasks.length === 0}
+                className="hidden sm:flex items-center gap-2"
+              >
+                <FileSpreadsheet className="h-4 w-4" />
+                {isDownloadingExcel ? 'Downloading...' : 'Export Excel'}
+              </Button>
+              <div className="sm:hidden flex gap-2">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={downloadPDF}
+                  disabled={isDownloadingPDF || tasks.length === 0}
+                  title="Export PDF"
+                >
+                  <FileText className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={downloadExcel}
+                  disabled={isDownloadingExcel || tasks.length === 0}
+                  title="Export Excel"
+                >
+                  <FileSpreadsheet className="h-4 w-4" />
+                </Button>
               </div>
             </div>
           </div>
