@@ -865,50 +865,70 @@ export default function Home() {
                     </div>
 
                     {/* Monthly Task List */}
-                    <Card>
-                      <CardContent className="p-6">
-                        <div className="space-y-3 max-h-[600px] overflow-y-auto">
-                          {(() => {
-                            const monthTasks = tasks.filter(t => {
-                              const taskDate = new Date(t.date)
-                              const selectedMonthDate = selectedDate || new Date()
-                              return taskDate.getMonth() === selectedMonthDate.getMonth() &&
-                                     taskDate.getFullYear() === selectedMonthDate.getFullYear()
-                            })
+                    <div className="space-y-6 max-h-[600px] overflow-y-auto">
+                      {(() => {
+                        const monthTasks = tasks.filter(t => {
+                          const taskDate = new Date(t.date)
+                          const selectedMonthDate = selectedDate || new Date()
+                          return taskDate.getMonth() === selectedMonthDate.getMonth() &&
+                                 taskDate.getFullYear() === selectedMonthDate.getFullYear()
+                        })
 
-                            if (monthTasks.length === 0) {
-                              return (
+                        if (monthTasks.length === 0) {
+                          return (
+                            <Card>
+                              <CardContent className="p-6">
                                 <div className="text-center py-8 text-muted-foreground">
                                   No tasks for this month
                                 </div>
-                              )
-                            }
+                              </CardContent>
+                            </Card>
+                          )
+                        }
 
-                            return monthTasks.map((task) => (
-                              <TaskCard
-                                key={task.id}
-                                task={task}
-                                onDelete={() => deleteTask(task.id)}
-                                onEdit={() => {
-                                  setEditingTask(task)
-                                  setEditDescription(task.description)
-                                }}
-                                isEditing={editingTask?.id === task.id}
-                                editDescription={editDescription}
-                                onEditChange={setEditDescription}
-                                onUpdate={updateTask}
-                                onCancelEdit={() => {
-                                  setEditingTask(null)
-                                  setEditDescription('')
-                                }}
-                                onEnhance={() => enhanceText(editDescription, task.category, true)}
-                                isEnhancing={isEditingEnhancing}
-                              />
-                            ))
-                          })()}
-                        </div>
-                      </CardContent>
-                    </Card>
+                        // Group month tasks by date
+                        const groupedMonthTasks = groupTasksByDate(monthTasks)
+                        const sortedDates = Object.keys(groupedMonthTasks).sort((a, b) => b.localeCompare(a))
+
+                        return sortedDates.map((date) => (
+                          <Card key={date}>
+                            <CardHeader>
+                              <CardTitle className="flex items-center justify-between">
+                                <span>{format(parseISO(date), 'PPP')}</span>
+                                <Badge variant="secondary">
+                                  {groupedMonthTasks[date].length} task{groupedMonthTasks[date].length !== 1 ? 's' : ''}
+                                </Badge>
+                              </CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                              <div className="space-y-3">
+                                {groupedMonthTasks[date].map((task) => (
+                                  <TaskCard
+                                    key={task.id}
+                                    task={task}
+                                    onDelete={() => deleteTask(task.id)}
+                                    onEdit={() => {
+                                      setEditingTask(task)
+                                      setEditDescription(task.description)
+                                    }}
+                                    isEditing={editingTask?.id === task.id}
+                                    editDescription={editDescription}
+                                    onEditChange={setEditDescription}
+                                    onUpdate={updateTask}
+                                    onCancelEdit={() => {
+                                      setEditingTask(null)
+                                      setEditDescription('')
+                                    }}
+                                    onEnhance={() => enhanceText(editDescription, task.category, true)}
+                                    isEnhancing={isEditingEnhancing}
+                                  />
+                                ))}
+                              </div>
+                            </CardContent>
+                          </Card>
+                        ))
+                      })()}
+                    </div>
                   </div>
                 </TabsContent>
               </Tabs>
@@ -1025,7 +1045,6 @@ function TaskCard({
           <div className="space-y-2">
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1">
-                <p className="text-xs text-muted-foreground mb-1">{format(parseISO(task.date), 'MMM dd, yyyy')}</p>
                 <p className="text-sm text-foreground leading-relaxed">{task.description}</p>
                 <Badge variant="outline" className="mt-2 text-xs">
                   {task.category}
