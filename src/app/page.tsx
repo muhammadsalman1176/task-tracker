@@ -1025,6 +1025,7 @@ function TaskCard({
           <div className="space-y-2">
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1">
+                <p className="text-xs text-muted-foreground mb-1">{format(parseISO(task.date), 'MMM dd, yyyy')}</p>
                 <p className="text-sm text-foreground leading-relaxed">{task.description}</p>
                 <Badge variant="outline" className="mt-2 text-xs">
                   {task.category}
