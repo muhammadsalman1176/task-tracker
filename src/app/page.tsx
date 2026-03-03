@@ -64,6 +64,7 @@ export default function Home() {
       setSelectedDate(new Date())
       setTaskDate(format(new Date(), 'yyyy-MM-dd'))
     })()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // Fetch tasks
@@ -85,11 +86,10 @@ export default function Home() {
 
   // Initial fetch
   useEffect(() => {
-    ;(async () => {
-      if (mounted) {
-        await fetchTasks()
-      }
-    })()
+    if (mounted) {
+      fetchTasks()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mounted])
 
   // Create task
