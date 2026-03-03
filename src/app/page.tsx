@@ -564,7 +564,7 @@ export default function Home() {
                     <PopoverContent className="w-auto p-0">
                       <CalendarComponent
                         mode="single"
-                        selected={parseISO(taskDate)}
+                        selected={taskDate ? parseISO(taskDate) : undefined}
                         onSelect={(date) => date && setTaskDate(format(date, 'yyyy-MM-dd'))}
                         initialFocus
                       />
