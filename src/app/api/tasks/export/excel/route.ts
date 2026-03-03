@@ -15,13 +15,24 @@ interface Task {
 // GET export tasks as Excel
 export async function GET(request: NextRequest) {
   try {
-    // Fetch all tasks sorted by date (newest first)
-    const tasks = await db.task.findMany({
+    const { searchParams } = new URL(request.url);
+    const monthParam = searchParams.get('month'); // Format: "YYYY-MM"
+
+    let tasks = await db.task.findMany({
       orderBy: [
         { date: 'desc' },
         { createdAt: 'desc' }
       ]
     });
+
+    // Filter by month if month parameter is provided
+    if (monthParam) {
+      const [year, month] = monthParam.split('-').map(Number);
+      tasks = tasks.filter(task => {
+        const taskDate = new Date(task.date);
+        return taskDate.getMonth() === month - 1 && taskDate.getFullYear() === year;
+      });
+    }
 
     if (tasks.length === 0) {
       return NextResponse.json(
