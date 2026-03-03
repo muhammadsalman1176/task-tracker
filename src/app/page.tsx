@@ -56,6 +56,7 @@ export default function Home() {
   const streamRef = useRef<MediaStream | null>(null)
   const audioChunksRef = useRef<Blob[]>([])
   const [mounted, setMounted] = useState(false)
+  const isFetchingRef = useRef(false)
 
   // Initialize dates on client side only
   useEffect(() => {
@@ -64,24 +65,51 @@ export default function Home() {
       setSelectedDate(new Date())
       setTaskDate(format(new Date(), 'yyyy-MM-dd'))
     })()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // Fetch tasks
   const fetchTasks = async (date?: string) => {
+    // Prevent duplicate fetch requests
+    if (isFetchingRef.current) {
+      console.log('Fetch already in progress, skipping...')
+      return
+    }
+
+    isFetchingRef.current = true
     setLoading(true)
     try {
       const url = date
         ? `/api/tasks?date=${date}`
         : '/api/tasks'
-      const response = await fetch(url)
+
+      // Add timeout to prevent hanging requests
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 10000) // 10 second timeout
+
+      const response = await fetch(url, {
+        signal: controller.signal,
+      })
+
+      clearTimeout(timeoutId)
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
       const data = await response.json()
       setTasks(data.tasks || [])
     } catch (error) {
-      console.error('Error fetching tasks:', error)
-      toast.error('Failed to fetch tasks')
+      if (error instanceof Error && error.name === 'AbortError') {
+        console.error('Fetch timeout:', error)
+        toast.error('Request timed out. Please try again.')
+      } else {
+        console.error('Error fetching tasks:', error)
+        toast.error('Failed to fetch tasks')
+      }
+      setTasks([]) // Set empty tasks on error
+    } finally {
+      setLoading(false)
+      isFetchingRef.current = false
     }
-    setLoading(false)
   }
 
   // Initial fetch
@@ -89,7 +117,6 @@ export default function Home() {
     if (mounted) {
       fetchTasks()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mounted])
 
   // Create task
