@@ -9,14 +9,15 @@ export async function PUT(
   try {
     const { id } = await params;
     const body = await request.json();
-    const { description, date, category } = body;
+    const { description, date, category, completed } = body;
 
     const task = await db.task.update({
       where: { id },
       data: {
-        ...(description && { description }),
-        ...(date && { date }),
-        ...(category && { category }),
+        ...(description !== undefined && { description }),
+        ...(date !== undefined && { date }),
+        ...(category !== undefined && { category }),
+        ...(completed !== undefined && { completed }),
       },
     });
 

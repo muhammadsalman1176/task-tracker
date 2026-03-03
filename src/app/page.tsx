@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { Mic, Calendar, List, Plus, Trash2, Edit2, Check, X, Square, Sparkles, FileText, FileSpreadsheet } from 'lucide-react'
+import { Mic, Calendar, List, Plus, Trash2, Edit2, Check, X, Square, Sparkles, FileText, FileSpreadsheet, BarChart3, TrendingUp, CheckCircle2, Circle, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Calendar as CalendarComponent } from '@/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Checkbox } from '@/components/ui/checkbox'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { format, parseISO } from 'date-fns'
 import { toast } from 'sonner'
@@ -19,6 +20,7 @@ interface Task {
   description: string
   date: string
   category: string
+  completed: boolean
   createdAt: string
   updatedAt: string
 }
@@ -167,6 +169,30 @@ export default function Home() {
     } catch (error) {
       console.error('Error deleting task:', error)
       toast.error('Failed to delete task')
+    }
+  }
+
+  // Toggle task completion
+  const toggleTaskCompletion = async (id: string, completed: boolean) => {
+    try {
+      const response = await fetch(`/api/tasks/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ completed })
+      })
+
+      if (response.ok) {
+        const updatedTasks = tasks.map(task =>
+          task.id === id ? { ...task, completed } : task
+        )
+        setTasks(updatedTasks)
+        toast.success(completed ? 'Task marked as complete' : 'Task marked as incomplete')
+      } else {
+        toast.error('Failed to update task status')
+      }
+    } catch (error) {
+      console.error('Error toggling task completion:', error)
+      toast.error('Failed to update task status')
     }
   }
 
@@ -563,7 +589,7 @@ export default function Home() {
           <Card className="border-2 shadow-lg">
             <CardContent className="p-6">
               <Tabs defaultValue="calendar" className="w-full">
-                <TabsList className="grid w-full max-w-md grid-cols-2">
+                <TabsList className="grid w-full max-w-lg grid-cols-3">
                   <TabsTrigger value="calendar" className="flex items-center gap-2">
                     <Calendar className="h-4 w-4" />
                     Calendar View
@@ -571,6 +597,10 @@ export default function Home() {
                   <TabsTrigger value="list" className="flex items-center gap-2">
                     <List className="h-4 w-4" />
                     List View
+                  </TabsTrigger>
+                  <TabsTrigger value="progress" className="flex items-center gap-2">
+                    <BarChart3 className="h-4 w-4" />
+                    Monthly Progress
                   </TabsTrigger>
                 </TabsList>
 
@@ -633,6 +663,7 @@ export default function Home() {
                                 }}
                                 onEnhance={() => enhanceText(editDescription, task.category, true)}
                                 isEnhancing={isEditingEnhancing}
+                                onToggleComplete={toggleTaskCompletion}
                               />
                             ))}
                           </div>
@@ -687,6 +718,7 @@ export default function Home() {
                                     }}
                                     onEnhance={() => enhanceText(editDescription, task.category, true)}
                                     isEnhancing={isEditingEnhancing}
+                                    onToggleComplete={toggleTaskCompletion}
                                   />
                                 ))}
                               </div>
@@ -695,6 +727,205 @@ export default function Home() {
                         ))}
                     </div>
                   )}
+                </TabsContent>
+
+                {/* Monthly Progress View */}
+                <TabsContent value="progress" className="space-y-6 mt-6">
+                  <div className="space-y-6">
+                    {/* Month Selector */}
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Select Month</CardTitle>
+                        <CardDescription>View your progress for a specific month</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={() => {
+                              const newDate = new Date(selectedDate || new Date())
+                              newDate.setMonth(newDate.getMonth() - 1)
+                              setSelectedDate(newDate)
+                            }}
+                          >
+                            <ChevronLeft className="h-4 w-4" />
+                          </Button>
+                          <div className="flex-1 text-center">
+                            <span className="text-lg font-semibold">
+                              {selectedDate ? format(selectedDate, 'MMMM yyyy') : format(new Date(), 'MMMM yyyy')}
+                            </span>
+                          </div>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={() => {
+                              const newDate = new Date(selectedDate || new Date())
+                              newDate.setMonth(newDate.getMonth() + 1)
+                              setSelectedDate(newDate)
+                            }}
+                          >
+                            <ChevronRight className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    {/* Statistics Cards */}
+                    <div className="grid gap-4 md:grid-cols-3">
+                      <Card>
+                        <CardContent className="p-6">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <p className="text-sm font-medium text-muted-foreground">Total Tasks</p>
+                              <p className="text-3xl font-bold mt-2">
+                                {tasks.filter(t => {
+                                  const taskDate = new Date(t.date)
+                                  const selectedMonthDate = selectedDate || new Date()
+                                  return taskDate.getMonth() === selectedMonthDate.getMonth() &&
+                                         taskDate.getFullYear() === selectedMonthDate.getFullYear()
+                                }).length}
+                              </p>
+                            </div>
+                            <List className="h-8 w-8 text-muted-foreground" />
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      <Card>
+                        <CardContent className="p-6">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <p className="text-sm font-medium text-muted-foreground">Completed</p>
+                              <p className="text-3xl font-bold mt-2 text-green-600">
+                                {tasks.filter(t => {
+                                  const taskDate = new Date(t.date)
+                                  const selectedMonthDate = selectedDate || new Date()
+                                  return taskDate.getMonth() === selectedMonthDate.getMonth() &&
+                                         taskDate.getFullYear() === selectedMonthDate.getFullYear() &&
+                                         t.completed
+                                }).length}
+                              </p>
+                            </div>
+                            <CheckCircle2 className="h-8 w-8 text-green-600" />
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      <Card>
+                        <CardContent className="p-6">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <p className="text-sm font-medium text-muted-foreground">Pending</p>
+                              <p className="text-3xl font-bold mt-2 text-orange-600">
+                                {tasks.filter(t => {
+                                  const taskDate = new Date(t.date)
+                                  const selectedMonthDate = selectedDate || new Date()
+                                  return taskDate.getMonth() === selectedMonthDate.getMonth() &&
+                                         taskDate.getFullYear() === selectedMonthDate.getFullYear() &&
+                                         !t.completed
+                                }).length}
+                              </p>
+                            </div>
+                            <Circle className="h-8 w-8 text-orange-600" />
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </div>
+
+                    {/* Progress Bar */}
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Completion Progress</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-3">
+                          <div className="flex justify-between text-sm">
+                            <span className="text-muted-foreground">Overall Completion</span>
+                            <span className="font-semibold">
+                              {(() => {
+                                const monthTasks = tasks.filter(t => {
+                                  const taskDate = new Date(t.date)
+                                  const selectedMonthDate = selectedDate || new Date()
+                                  return taskDate.getMonth() === selectedMonthDate.getMonth() &&
+                                         taskDate.getFullYear() === selectedMonthDate.getFullYear()
+                                })
+                                const completedCount = monthTasks.filter(t => t.completed).length
+                                const percentage = monthTasks.length > 0 ? Math.round((completedCount / monthTasks.length) * 100) : 0
+                                return `${percentage}%`
+                              })()}
+                            </span>
+                          </div>
+                          <div className="h-3 bg-secondary rounded-full overflow-hidden">
+                            <div
+                              className="h-full bg-green-600 transition-all duration-500"
+                              style={{
+                                width: `${(() => {
+                                  const monthTasks = tasks.filter(t => {
+                                    const taskDate = new Date(t.date)
+                                    const selectedMonthDate = selectedDate || new Date()
+                                    return taskDate.getMonth() === selectedMonthDate.getMonth() &&
+                                           taskDate.getFullYear() === selectedMonthDate.getFullYear()
+                                  })
+                                  const completedCount = monthTasks.filter(t => t.completed).length
+                                  return monthTasks.length > 0 ? (completedCount / monthTasks.length) * 100 : 0
+                                })()}%`
+                              }}
+                            />
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    {/* Category Breakdown */}
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Tasks by Category</CardTitle>
+                        <CardDescription>Breakdown of tasks by category for this month</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-4">
+                          {(() => {
+                            const monthTasks = tasks.filter(t => {
+                              const taskDate = new Date(t.date)
+                              const selectedMonthDate = selectedDate || new Date()
+                              return taskDate.getMonth() === selectedMonthDate.getMonth() &&
+                                     taskDate.getFullYear() === selectedMonthDate.getFullYear()
+                            })
+                            const categoryStats = monthTasks.reduce((acc, task) => {
+                              acc[task.category] = (acc[task.category] || 0) + 1
+                              return acc
+                            }, {} as Record<string, number>)
+
+                            return Object.entries(categoryStats).length > 0 ? (
+                              Object.entries(categoryStats)
+                                .sort(([, a], [, b]) => b - a)
+                                .map(([category, count]) => {
+                                  const completedInCategory = monthTasks.filter(t => t.category === category && t.completed).length
+                                  const percentage = Math.round((completedInCategory / count) * 100)
+                                  return (
+                                    <div key={category} className="space-y-2">
+                                      <div className="flex items-center justify-between">
+                                        <span className="text-sm font-medium">{category}</span>
+                                        <span className="text-sm text-muted-foreground">{completedInCategory}/{count} ({percentage}%)</span>
+                                      </div>
+                                      <div className="h-2 bg-secondary rounded-full overflow-hidden">
+                                        <div
+                                          className="h-full bg-primary transition-all duration-300"
+                                          style={{ width: `${percentage}%` }}
+                                        />
+                                      </div>
+                                    </div>
+                                  )
+                                })
+                            ) : (
+                              <p className="text-center text-muted-foreground py-4">No tasks for this month</p>
+                            )
+                          })()}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
                 </TabsContent>
               </Tabs>
             </CardContent>
@@ -760,6 +991,7 @@ interface TaskCardProps {
   onCancelEdit: () => void
   onEnhance: () => void
   isEnhancing: boolean
+  onToggleComplete: (id: string, completed: boolean) => void
 }
 
 function TaskCard({
@@ -772,7 +1004,8 @@ function TaskCard({
   onUpdate,
   onCancelEdit,
   onEnhance,
-  isEnhancing
+  isEnhancing,
+  onToggleComplete
 }: TaskCardProps) {
   return (
     <Card className="group hover:shadow-md transition-shadow">
@@ -809,11 +1042,20 @@ function TaskCard({
         ) : (
           <div className="space-y-2">
             <div className="flex items-start justify-between gap-3">
-              <div className="flex-1">
-                <p className="text-sm text-foreground leading-relaxed">{task.description}</p>
-                <Badge variant="outline" className="mt-2 text-xs">
-                  {task.category}
-                </Badge>
+              <div className="flex-1 flex items-start gap-3">
+                <Checkbox
+                  checked={task.completed}
+                  onCheckedChange={(checked) => onToggleComplete(task.id, checked as boolean)}
+                  className="mt-1"
+                />
+                <div className="flex-1">
+                  <p className={`text-sm leading-relaxed ${task.completed ? 'line-through text-muted-foreground' : 'text-foreground'}`}>
+                    {task.description}
+                  </p>
+                  <Badge variant="outline" className="mt-2 text-xs">
+                    {task.category}
+                  </Badge>
+                </div>
               </div>
               <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                 <Button size="icon" variant="ghost" onClick={onEdit}>
